@@ -22,7 +22,29 @@
 import types::*;
 module fetch(
     input clk,
-    input rst
+    input rst,
+	input branching,
+	input u12 branch,
+	input offsetting,
+	input i16 offset,
+	input stalled,
+	output u16 program_counter
 );
-u12 program_counter = 0;
+
+always_ff @(posedge clk) begin
+    if(rst) begin
+		program_counter = 32;//should always be even but I won't enfore that/forceably set the LSB to 0
+	end else begin
+		if(branching)
+			program_counter <= branch;
+		else if(offseting)
+			program_counter <= program_counter + 2 + offset;
+		else if(stalled)
+			program_counter <= program_counter + 2;
+		else
+			program_counter <= program_counter;//for when waiting on a keypress
+	end
+end
+
+
 endmodule
