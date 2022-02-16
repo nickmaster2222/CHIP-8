@@ -33,7 +33,8 @@ module fetch(
 
 always_ff @(posedge clk) begin
     if(rst) begin
-		program_counter = 32;//should always be even but I won't enfore that/forceably set the LSB to 0
+		//80 for builtin character sprites and 32 for a 16 entry stack
+		program_counter = 112;//should always be even but I won't enfore that/forceably set the LSB to 0
 	end else begin
 		if(branching)
 			program_counter <= branch;
