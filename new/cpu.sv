@@ -19,9 +19,10 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
+import types::*;
 module cpu(
     input clk,
     input rst
     );
+	u8 memory [4095:0];//main computer memory
 endmodule

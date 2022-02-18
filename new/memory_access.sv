@@ -19,9 +19,12 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
+import types::*;
 module memory_access(
     input clk,
-    input rst
+    input rst,
+	input u2 mem_in_out,
+	input stalled,
+	output stall
     );
 endmodule

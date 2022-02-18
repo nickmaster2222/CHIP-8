@@ -20,19 +20,28 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 import types:**
+import imports:**;
 module decode(
     input clk,
     input rst,
 	input u16 instruction,//this will be passed to execute as well for multi-clock instructions without this section having to handle it
 	input u8 registers[15:0],
 	input u16 I,
-	output u16 r1,
-	output u16 r2,
+	input stalled,
+	input u5 bypass_reg,
+	input u8 bypass_val,
+	input bypass_vf,
+	input u8 bypass_vf_val,
+	output stall,
+	output u16 I_out,
+	output u8 r1,
+	output u8 r2,
 	output u8 opcode,
 	output u12 immediate,
 	output decode_trap //invalid instruction encountered
     );
-	always_comb begin//this could be shortened to instead use a LUT for the opcodes and this only handle every input format
+	
+	always_ff(posedge clk) begin//this could be shortened to instead use a LUT for the opcodes and this only handle every input format
 		case(instruction) inside
 			16'h0000: begin 
 				opcode = 0;		//NOP
@@ -88,7 +97,7 @@ module decode(
 			16'hA???: begin 	//LD I, addr
 				opcode = 10;
 				immediate = instruction[3:0];
-				r1 = 16;//Physical register name for I
+				I_out = I;
 			end
 			16'hF?07: begin 	//LD Vx, DT
 				opcode = 13;
@@ -109,6 +118,7 @@ module decode(
 			16'hF?29: begin 	//LD F, Vx
 				opcode = 17;
 				r1 = registers[instruction[2]];
+				I_out = I;
 			end
 			16'hF?33: begin 	//LD B, Vx
 				opcode = 18;
@@ -117,10 +127,12 @@ module decode(
 			16'hF?55: begin 	//LD [I], Vx
 				opcode = 19;
 				r1 = registers[instruction[2]];
+				I_out = I;
 			end
 			16'hF?65: begin 	//LD Vx, [I]
 				opcode = 20;
 				r1 = registers[instruction[2]];
+				I_out = I;
 			end
 			16'h7???: begin 	//ADD Vx, byte
 				opcode = 21;
@@ -135,7 +147,7 @@ module decode(
 			16'hF?1E: begin 	//ADD I, Vx
 				opcode = 22;
 				r1 = registers[instruction[2]];
-				r2 = 16;
+				I_out = I;
 			end
 			16'h8??5: begin 	//SUB Vx, Vy
 				opcode = 24;
@@ -182,6 +194,7 @@ module decode(
 				r1 = registers[instruction[2]];
 				r2 = registers[instruction[1]];
 				immediate = instruction[0];
+				I_out = I;
 			end
 			16'hE?9E: begin 	//SKP Vx
 				opcode = 33;

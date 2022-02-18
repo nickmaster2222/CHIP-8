@@ -22,7 +22,22 @@
 
 module writeback(
     input clk,
-    input rst
+    input rst,
+	input u5 reg_write1,
+	input u5 reg_write2,
+	input u5 r1,
+	input u5 r2,
+	input u8 val1,
+	input u8 val2,
+	output u8 registers [15:0],
+	output u16 I,
+	output u1 branching
+	output u16 branch,
+	
     );
+	
+	always_ff(negedge clk) begin
+		
+	end
 	
 endmodule

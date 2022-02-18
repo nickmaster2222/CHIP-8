@@ -24,11 +24,11 @@ module fetch(
     input clk,
     input rst,
 	input branching,
-	input u12 branch,
+	input u16 branch,
 	input offsetting,
 	input i16 offset,
 	input stalled,
-	output u16 program_counter
+	output u16 program_counter = 112
 );
 
 always_ff @(posedge clk) begin
