@@ -8,7 +8,7 @@ typedef struct {
 	u8 val1,
 	u8 val2,
 	u16 I
-} cpu_instruction;
+} chip8_instruction;
 
 
 
